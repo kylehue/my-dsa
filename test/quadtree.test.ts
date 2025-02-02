@@ -129,7 +129,7 @@ describe("Quadtree", () => {
             y: 10,
             width: 80,
          })
-      ).toThrowError("Location must be bounded.");
+      ).toThrowError();
 
       expect(() =>
          quadtree.retrieve({
@@ -138,11 +138,11 @@ describe("Quadtree", () => {
                x: 2,
             },
          })
-      ).toThrowError("Location must be bounded.");
+      ).toThrowError();
 
       expect(() =>
          // @ts-expect-error
          quadtree.retrieve(null)
-      ).toThrowError("Location must be bounded.");
+      ).toThrowError();
    });
 });

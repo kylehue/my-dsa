@@ -13,6 +13,7 @@
   - [DisjointSet](#disjointset)
   - [Trie](#trie)
   - [Quadtree](#quadtree)
+  - [HashGrid](#hashgrid)
   - [LRUCache](#lrucache)
   - [SegmentTree](#segmenttree)
   - [BinarySearchTree](#binarysearchtree)
@@ -264,6 +265,22 @@ quadtree.insert(item);
 // Retrieve all objects within specified bounds
 let searchBounds = { x: 5, y: 5, width: 20, height: 20 };
 let retrievedItems = quadtree.retrieve(searchBounds);
+```
+
+## HashGrid
+Same as quadtree, but a bit simpler and faster.
+```ts
+import { HashGrid } from "my-dsa";
+
+const hashGrid = new HashGrid();
+
+// Insert
+let item = { x: 10, y: 10, width: 5, height: 5 };
+hashGrid.insert({});
+
+// Retrieve
+let searchBounds = { x: 5, y: 5, width: 20, height: 20 };
+let retrievedItems = hashGrid.retrieve(searchBounds);
 ```
 
 ## LRUCache

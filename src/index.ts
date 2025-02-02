@@ -9,3 +9,4 @@ export { LRUCache } from "./lru-cache";
 export { SegmentTree } from "./segment-tree";
 export { BinarySearchTree } from "./binary-search-tree";
 export { IntervalTree } from "./interval-tree";
+export { HashGrid } from "./hash-grid";
