@@ -1,4 +1,4 @@
-export class Quadtree<T extends Bounds> {
+export class Quadtree<T = Bounds | BoundedObject> {
    private readonly _config: QuadtreeConfig;
    private readonly _baseBounds: Bounds;
    private _root: QuadtreeNode<T>;
@@ -32,14 +32,14 @@ export class Quadtree<T extends Bounds> {
    /**
     * Retrieves all objects that is inside the specified bounds.
     *
-    * @param bounds The bounds to retrieve the objects from.
+    * @param location The location of the object to retrieve from.
     *
     * @timeComplexity `O(n)` / `Ω(log(n))`
     *
     * @returns An array of objects that are inside the specified bounds.
     */
-   retrieve(bounds: Bounds): T[] {
-      return this._root.retrieve(bounds);
+   retrieve(location: T | Bounds | BoundedObject): T[] {
+      return this._root.retrieve(location);
    }
 
    config() {
@@ -51,7 +51,7 @@ export class Quadtree<T extends Bounds> {
    }
 }
 
-class QuadtreeNode<T extends Bounds> {
+class QuadtreeNode<T = Bounds | BoundedObject> {
    private readonly _quadtree: Quadtree<T>;
    private readonly _bounds: Bounds;
    private readonly _depth: number = 0;
@@ -92,8 +92,9 @@ class QuadtreeNode<T extends Bounds> {
       this._split(subWidth, subHeight);
    }
 
-   retrieve(bounds: Bounds): T[] {
+   retrieve(location: T | Bounds | BoundedObject): T[] {
       let result: T[] = [];
+      let bounds = this._getBounds(location);
 
       // DFS search in subnodes
       let stack: QuadtreeNode<T>[] = [this];
@@ -117,6 +118,29 @@ class QuadtreeNode<T extends Bounds> {
       }
 
       return result;
+   }
+
+   private _getBounds(location: T | Bounds | BoundedObject): Bounds {
+      let loc = location as any;
+      if (!loc) throw new Error("Location must be bounded.");
+      if (
+         typeof loc.bounds === "object" &&
+         typeof loc.bounds.x === "number" &&
+         typeof loc.bounds.y === "number" &&
+         typeof loc.bounds.width === "number" &&
+         typeof loc.bounds.height === "number"
+      ) {
+         return loc.bounds;
+      } else if (
+         typeof loc.x === "number" &&
+         typeof loc.y === "number" &&
+         typeof loc.width === "number" &&
+         typeof loc.height === "number"
+      ) {
+         return loc;
+      }
+
+      throw new Error("Location must be bounded.");
    }
 
    private _getQuadrantIndices(bounds: Bounds): number[] {
@@ -189,7 +213,8 @@ class QuadtreeNode<T extends Bounds> {
 
       // Transfer this current node's objects to their respective subnodes
       for (let object of this._objects) {
-         let indices = this._getQuadrantIndices(object);
+         let bounds = this._getBounds(object);
+         let indices = this._getQuadrantIndices(bounds);
          for (let index of indices) {
             this._nodes[index].insert(object);
          }
@@ -228,4 +253,8 @@ export interface Bounds {
    y: number;
    width: number;
    height: number;
+}
+
+export interface BoundedObject {
+   bounds: Bounds;
 }

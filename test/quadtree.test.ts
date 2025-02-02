@@ -91,18 +91,58 @@ describe("Quadtree", () => {
       expect(retrievedObjects2).not.toContain(item1);
    });
 
-   it("should respect maxDepth and not split beyond it", () => {
-      quadtree = new Quadtree(
+   it("should allow object with bounds property", () => {
+      const quadtree = new Quadtree(
          { x: 0, y: 0, width: 100, height: 100 },
          { maxDepth: 1, maxObjects: 1 }
       );
 
-      const item1 = { x: 10, y: 10, width: 20, height: 20 };
-      const item2 = { x: 70, y: 70, width: 20, height: 20 };
+      const item1 = { bounds: { x: 10, y: 10, width: 20, height: 20 } };
+      const item2 = { bounds: { x: 70, y: 70, width: 20, height: 20 } };
       quadtree.insert(item1);
       quadtree.insert(item2);
 
-      // @ts-ignore
-      expect(quadtree.root()._nodes.length).toBe(0);
+      expect(
+         quadtree.retrieve({
+            x: 10,
+            y: 10,
+            width: 80,
+            height: 80,
+         }).length
+      ).toBe(2);
+
+      expect(
+         quadtree.retrieve({
+            bounds: {
+               x: 10,
+               y: 10,
+               width: 80,
+               height: 80,
+            },
+         }).length
+      ).toBe(2);
+
+      expect(() =>
+         // @ts-expect-error
+         quadtree.retrieve({
+            x: 10,
+            y: 10,
+            width: 80,
+         })
+      ).toThrowError("Location must be bounded.");
+
+      expect(() =>
+         quadtree.retrieve({
+            // @ts-expect-error
+            bounds: {
+               x: 2,
+            },
+         })
+      ).toThrowError("Location must be bounded.");
+
+      expect(() =>
+         // @ts-expect-error
+         quadtree.retrieve(null)
+      ).toThrowError("Location must be bounded.");
    });
 });
