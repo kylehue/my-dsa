@@ -86,9 +86,12 @@ export class SegmentTree {
     *
     * @timeComplexity `O(log(n))`
     */
-   update(index: number, newValue: number): void {
+   update(index: number, newValue: number | ((num: number) => number)): void {
       index += this._origSize;
-      this._tree[index] = newValue;
+      this._tree[index] =
+         typeof newValue === "function"
+            ? newValue(this._tree[index])
+            : newValue;
 
       // Propagate the change up the tree
       while (index > 1) {

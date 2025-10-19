@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { SegmentTree, SegmentTreeBuilder } from "../src/segment-tree";
 
 describe("SegmentTree", () => {
-   let nums;
-   let segTree;
+   let nums: number[];
+   let segTree: SegmentTree;
    let minBuilder: SegmentTreeBuilder = (a, b) => Math.min(a, b);
    let maxBuilder: SegmentTreeBuilder = (a, b) => Math.max(a, b);
 
