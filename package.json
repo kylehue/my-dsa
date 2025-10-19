@@ -5,7 +5,9 @@
    "type": "module",
    "scripts": {
       "dev": "vite",
-      "build": "tsc && vite build && vite build --mode modules",
+      "build": "tsc && vite build && npm run build:modules && npm run build:raw",
+      "build:modules": "vite build --mode modules",
+      "build:raw": "tsup",
       "preview": "vite preview",
       "test": "vitest",
       "publish": "npm run build && npm publish"
@@ -15,7 +17,8 @@
    },
    "devDependencies": {
       "@types/node": "^20.12.12",
-      "glob": "^10.4.1",
+      "glob": "^10.4.5",
+      "tsup": "^8.5.0",
       "type-fest": "^4.26.1",
       "typescript": "^5.5.3",
       "vite": "^5.4.0",
